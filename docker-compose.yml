@@ -22,13 +22,14 @@ services:
     image: 0xemma/flood:latest
     restart: unless-stopped
     network_mode: host
-    enviorment:
+    environment:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
       - TZ=${TZ} # timezone, defined in .env
     ports: 
       - 3000:3000
-    depends_on: rtorrent
+    depends_on: 
+      - rtorrent
     volumes:
       - rtorrent_sock:/data
 
