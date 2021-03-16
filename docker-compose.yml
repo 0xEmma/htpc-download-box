@@ -1,10 +1,10 @@
 version: "3.4"
 services:
-  deluge:
-    container_name: deluge
-    image: linuxserver/deluge:latest
+  rtorrent:
+    container_name: rtorrent
+    image: 0xemma/rtorrent:latest
     restart: unless-stopped
-    network_mode: host # run on the vpn network
+    network_mode: host 
     environment:
       - PUID=${PUID} # default user id, defined in .env
       - PGID=${PGID} # default group id, defined in .env
@@ -12,6 +12,25 @@ services:
     volumes:
       - ${ROOT}/downloads:/downloads # downloads folder
       - ${ROOT}/config/deluge:/config # config files
+      - rtorrent_sock:/data
+    ports:
+      - 6881:6881
+      - 49264:29264
+
+  flood:
+    container_name: flood_ui
+    image: 0xemma/flood:latest
+    restart: unless-stopped
+    network_mode: host
+    enviorment:
+      - PUID=${PUID} # default user id, defined in .env
+      - PGID=${PGID} # default group id, defined in .env
+      - TZ=${TZ} # timezone, defined in .env
+    ports: 
+      - 3000:3000
+    depends_on: rtorrent
+    volumes:
+      - rtorrent_sock:/data
 
   jackett:
     container_name: jackett
@@ -114,3 +133,5 @@ services:
       - ${ROOT}/downloads:/downloads
     ports:
       - 8686:8686
+volumes:
+  rtorrent_sock
