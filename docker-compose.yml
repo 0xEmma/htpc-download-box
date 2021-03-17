@@ -2,36 +2,27 @@ version: "3.4"
 services:
   rtorrent:
     container_name: rtorrent
-    image: 0xemma/rtorrent:latest
+    image: romancin/rutorrent-flood:0.9.8
+    tty: true
     restart: unless-stopped
     network_mode: host 
     environment:
-      - PUID=${PUID} # default user id, defined in .env
-      - PGID=${PGID} # default group id, defined in .env
+      - PUID=0 # default user id, defined in .env
+      - PGID=0 # default group id, defined in .env
       - TZ=${TZ} # timezone, defined in .env
+      - CREATE_SUBDIR_BY_TRACKERS=NO
+      - SSL_ENABLED=NO
+      - RT_TOKEN=
+      - RT_MASTERS=
     volumes:
       - ${ROOT}/downloads:/downloads # downloads folder
-      - ${ROOT}/config/deluge:/config # config files
+      - ${ROOT}/config/rtorrent:/config # config files
       - rtorrent_sock:/data
     ports:
-      - 6881:6881
-      - 49264:29264
-
-  flood:
-    container_name: flood_ui
-    image: 0xemma/flood:latest
-    restart: unless-stopped
-    network_mode: host
-    environment:
-      - PUID=${PUID} # default user id, defined in .env
-      - PGID=${PGID} # default group id, defined in .env
-      - TZ=${TZ} # timezone, defined in .env
-    ports: 
-      - 3000:3000
-    depends_on: 
-      - rtorrent
-    volumes:
-      - rtorrent_sock:/data
+      - 8853:80
+      - 32316:52316
+      - 3333:3000
+      - 51415:51415
 
   jackett:
     container_name: jackett
