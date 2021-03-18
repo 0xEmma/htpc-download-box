@@ -125,5 +125,17 @@ services:
       - ${ROOT}/downloads:/downloads
     ports:
       - 8686:8686
+  overseerr:
+    container_name: overseerr
+    image: sctx/overseerr
+    restart: unless-stopped
+    network_mode:host
+    enviorment:
+      - TZ=${TZ}
+      - LOG_LEVEL=info
+    ports:
+      - 5055:5055
+    volumes:
+      - ${ROOT}/config/overseerr:/app/config
 volumes:
   rtorrent_sock:
