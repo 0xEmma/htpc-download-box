@@ -129,8 +129,8 @@ services:
     container_name: overseerr
     image: sctx/overseerr
     restart: unless-stopped
-    network_mode:host
-    enviorment:
+    network_mode: host
+    environment:
       - TZ=${TZ}
       - LOG_LEVEL=info
     ports:
