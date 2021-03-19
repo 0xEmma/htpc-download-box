@@ -137,5 +137,22 @@ services:
       - 5055:5055
     volumes:
       - ${ROOT}/config/overseerr:/app/config
+  emby:
+    image: linuxserver/emby:4.5.4.0-ls78
+    container_name: emby
+    restart: unless-stopped
+    environment:
+      - UMASK_SET # umask setting of Emby, default if left unset is 022.
+      - TZ=${TZ} # Specify a timezone to use (e.g. Europe/London)
+      - PUID=${PUID} # ID of user
+      - PGID=${PGID} # ID of the group to assign to managed files
+    volumes:
+      - ${ROOT}/transcode:/transcode # Path for transcoding folder, optional.
+      - ${ROOT}/complete:/data/content # Media goes here
+      - ${ROOT}/config/emby:/config # Emby data storage location. This can grow very large, 50gb+ is likely for a large collection.
+    ports:
+      - 8920:8920/tcp # Application HTTPS port (optional)
+      - 8096:8096/tcp # Application HTTP port
+
 volumes:
   rtorrent_sock:
